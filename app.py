@@ -1,3 +1,4 @@
+import os
 import gradio as gr
 import pandas as pd
 import joblib
@@ -18,9 +19,9 @@ def predict_loan(income, age, loan_amount):
     probability = model.predict_proba(data)[0][1] * 100
 
     if prediction == 1:
-        result = "Loan Approved ✅"
+        result = "Loan Approved"
     else:
-        result = "Loan Not Approved ❌"
+        result = "Loan Not Approved"
 
     return result, f"Approval Probability: {probability:.2f}%"
 
@@ -40,4 +41,10 @@ demo = gr.Interface(
     description="Enter applicant details to predict loan approval."
 )
 
-demo.launch()
+# Render provides the PORT environment variable
+port = int(os.environ.get("PORT", 7860))
+
+demo.launch(
+    server_name="0.0.0.0",
+    server_port=port
+)
